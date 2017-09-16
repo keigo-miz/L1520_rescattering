@@ -1,6 +1,6 @@
 /* based on Ryu's paper (2014) */
 
-#include "../spinor_mat.h"
+#include "../amp_calc/spinor_mat.h"
 #define MLs (1.5195)  // L(1520) mass
 #define Mk (0.493677)  // K+ mass
 
@@ -27,13 +27,13 @@ TComplex ee(int mu, int lambda, TLorentzVector p) {  // Ryu's thesis (A.13)
 Spi u32(int mu, TLorentzVector p, int S) {
   Spi ret;
   if (S==3) {
-    ret = u(1,p)*ee(mu,1,p);
+    ret = u(p,1)*ee(mu,1,p);
   } else if (S==1) {
-    ret = u(1,p)*(ee(mu,0,p)*TComplex(TMath::Sqrt(2./3.),0)) + u(-1,p)*(ee(mu,1,p)*TComplex(TMath::Sqrt(1./3.),0));
+    ret = u(p,1)*(ee(mu,0,p)*TComplex(TMath::Sqrt(2./3.),0)) + u(p,-1)*(ee(mu,1,p)*TComplex(TMath::Sqrt(1./3.),0));
   } else if (S==-1) {
-    ret = u(1,p)*(ee(mu,-1,p)*TComplex(TMath::Sqrt(1./3.),0)) + u(-1,p)*(ee(mu,0,p)*TComplex(TMath::Sqrt(2./3.),0));
+    ret = u(p,1)*(ee(mu,-1,p)*TComplex(TMath::Sqrt(1./3.),0)) + u(p,-1)*(ee(mu,0,p)*TComplex(TMath::Sqrt(2./3.),0));
   } else if (S==-3) {
-    ret = u(-1,p)*ee(mu,-1,p);
+    ret = u(p,-1)*ee(mu,-1,p);
   } else {
     std::cerr << "[error] invalid S in u32" << std::endl;
     exit(0);
@@ -59,7 +59,7 @@ TComplex M_L_s(double Eg, int hel_gamma, int mi, TLorentzVector k2) {
 
   /* polarization vector */
   TComplex eps[4];
-  FillPolVector(hel_gamma, k1, eps);
+  FillPolVector(k1, hel_gamma, eps);
 
   /* deal with the difference of metric definitions */
   double kk1[4] = {k1(3), k1(0), k1(1), k1(2)};
@@ -71,7 +71,7 @@ TComplex M_L_s(double Eg, int hel_gamma, int mi, TLorentzVector k2) {
   Mat qsslash = G[0]*qqs[0] - G[1]*qqs[1] - G[2]*qqs[2] - G[3]*qqs[3];
   Mat eslash  = G[0]*eps[0] - G[1]*eps[1] - G[2]*eps[2] - G[3]*eps[3];
 
-  Spi tmp0 = (Gamma5*qsslash+Gamma5*Mp)*(1/(qs.M2()-sq(Mp)))*eslash*u(mi,p1);
+  Spi tmp0 = (Gamma5*qsslash+Gamma5*Mp)*(1/(qs.M2()-sq(Mp)))*eslash*u(p1,mi);
   int S = 2*hel_gamma + mi;
   TComplex tmp1 = barDot(u32(0,p2,S),tmp0*kk2[0])
                 - barDot(u32(1,p2,S),tmp0*kk2[1])
@@ -79,7 +79,7 @@ TComplex M_L_s(double Eg, int hel_gamma, int mi, TLorentzVector k2) {
                 - barDot(u32(3,p2,S),tmp0*kk2[3]);
   TComplex term1 = TComplex(0,e*g/Mk)*tmp1;
 
-  Spi tmp2 = (Gamma5*qsslash+Gamma5*Mp)*(1/(qs.M2()-sq(Mp)))*eslash*k1slash*u(mi,p1);
+  Spi tmp2 = (Gamma5*qsslash+Gamma5*Mp)*(1/(qs.M2()-sq(Mp)))*eslash*k1slash*u(p1,mi);
   TComplex tmp3 = barDot(u32(0,p2,S),tmp2*kk2[0])
                 - barDot(u32(1,p2,S),tmp2*kk2[1])
                 - barDot(u32(2,p2,S),tmp2*kk2[2])
@@ -106,7 +106,7 @@ TComplex M_L_t(double Eg, int hel_gamma, int mi, TLorentzVector k2) {
 
   /* polarization vector */
   TComplex eps[4];
-  FillPolVector(hel_gamma, k1, eps);
+  FillPolVector(k1, hel_gamma, eps);
 
   /* deal with the difference of metric definition */
   TComplex kk2[4] = {TComplex(k2(3),0), TComplex(k2(0),0), TComplex(k2(1),0), TComplex(k2(2),0)};
@@ -115,10 +115,10 @@ TComplex M_L_t(double Eg, int hel_gamma, int mi, TLorentzVector k2) {
   TComplex tmp0 = kk2[0]*eps[0] - kk2[1]*eps[1] - kk2[2]*eps[2] - kk2[3]*eps[3];
 
   int S = 2*hel_gamma + mi;
-  TComplex tmp1 = barDot(u32(0,p2,S),Gamma5*qqt[0]*u(mi,p1))
-                - barDot(u32(1,p2,S),Gamma5*qqt[1]*u(mi,p1))
-                - barDot(u32(2,p2,S),Gamma5*qqt[2]*u(mi,p1))
-                - barDot(u32(3,p2,S),Gamma5*qqt[3]*u(mi,p1));
+  TComplex tmp1 = barDot(u32(0,p2,S),Gamma5*qqt[0]*u(p1,mi))
+                - barDot(u32(1,p2,S),Gamma5*qqt[1]*u(p1,mi))
+                - barDot(u32(2,p2,S),Gamma5*qqt[2]*u(p1,mi))
+                - barDot(u32(3,p2,S),Gamma5*qqt[3]*u(p1,mi));
 
   return (TComplex(0,2*e*g/(Mk*(qt.M2()-sq(Mk))))*tmp1*tmp0);
 }
@@ -139,13 +139,13 @@ TComplex M_L_c(double Eg, int hel_gamma, int mi, TLorentzVector k2) {
 
   /* polarization vector */
   TComplex eps[4];
-  FillPolVector(hel_gamma, k1, eps);
+  FillPolVector(k1, hel_gamma, eps);
 
   int S = 2*hel_gamma + mi;
-  TComplex tmp0 = barDot(u32(0,p2,S),Gamma5*eps[0]*u(mi,p1))
-                - barDot(u32(1,p2,S),Gamma5*eps[1]*u(mi,p1))
-                - barDot(u32(2,p2,S),Gamma5*eps[2]*u(mi,p1))
-                - barDot(u32(3,p2,S),Gamma5*eps[3]*u(mi,p1));
+  TComplex tmp0 = barDot(u32(0,p2,S),Gamma5*eps[0]*u(p1,mi))
+                - barDot(u32(1,p2,S),Gamma5*eps[1]*u(p1,mi))
+                - barDot(u32(2,p2,S),Gamma5*eps[2]*u(p1,mi))
+                - barDot(u32(3,p2,S),Gamma5*eps[3]*u(p1,mi));
 
   return (TComplex(0,-e*g/Mk)*tmp0);
 }
@@ -175,7 +175,7 @@ TComplex M_R_s(double Eg, double costh, int hel_phi, int mf, TLorentzVector k1) 
 
   /* polarization vector */
   TComplex eps[4];
-  FillPolVector(hel_phi, pPhoton, eps);
+  FillPolVector(pPhoton, hel_phi, eps);
 
   /* deal with the difference of metric definition */
   double kk1[4] = {k1(3), k1(0), k1(1), k1(2)};
@@ -197,8 +197,8 @@ TComplex M_R_s(double Eg, double costh, int hel_phi, int mf, TLorentzVector k1) 
           - u32(3,p1,S)*kk1[3];
 
   Spi tmp0 = (eslash*qsslash + eslash*Mp)*(1/(qs.M2()-sq(Mp)))*Gamma5*k1u;
-  TComplex term1 = TComplex(0,-g2/Mk)*barDot(u(mf,p2),tmp0);
-  TComplex term2 = TComplex(0,g2*kappa/(2*Mk*Mp))*barDot(u(mf,p2),k2slash*tmp0);
+  TComplex term1 = TComplex(0,-g2/Mk)*barDot(u(p2,mf),tmp0);
+  TComplex term2 = TComplex(0,g2*kappa/(2*Mk*Mp))*barDot(u(p2,mf),k2slash*tmp0);
 
   return (term1 + term2);
 }
@@ -228,7 +228,7 @@ TComplex M_R_t(double Eg, double costh, int hel_phi, int mf, TLorentzVector k1) 
 
   /* polarization vector */
   TComplex eps[4];
-  FillPolVector(hel_phi, pPhoton, eps);
+  FillPolVector(pPhoton, hel_phi, eps);
 
   /* deal with the difference of metric definition */
   double qqt[4] = {qt(3), qt(0), qt(1), qt(2)};
@@ -245,7 +245,7 @@ TComplex M_R_t(double Eg, double costh, int hel_phi, int mf, TLorentzVector k1) 
                 - kk1[2]*TComplex::Conjugate(eps[2])
                 - kk1[3]*TComplex::Conjugate(eps[3]);
 
-  return (TComplex(0,-2*g2/(Mk*(qt.M2()-sq(Mk))))*tmp1*barDot(u(mf,p2),tmp0));
+  return (TComplex(0,-2*g2/(Mk*(qt.M2()-sq(Mk))))*tmp1*barDot(u(p2,mf),tmp0));
 }
 
 TComplex M_R_c(double Eg, double costh, int hel_phi, int mf, TLorentzVector k1) {
@@ -272,7 +272,7 @@ TComplex M_R_c(double Eg, double costh, int hel_phi, int mf, TLorentzVector k1) 
 
   /* polarization vector */
   TComplex eps[4];
-  FillPolVector(hel_phi, pPhoton, eps);
+  FillPolVector(pPhoton, hel_phi, eps);
 
   int S = 2*hel_phi + mf;
   Spi tmp0 = u32(0,p1,S)*TComplex::Conjugate(eps[0])
@@ -280,7 +280,7 @@ TComplex M_R_c(double Eg, double costh, int hel_phi, int mf, TLorentzVector k1) 
            - u32(2,p1,S)*TComplex::Conjugate(eps[2])
            - u32(3,p1,S)*TComplex::Conjugate(eps[3]);
 
-  return (TComplex(0,-g2/Mk)*barDot(u(mf,p2),Gamma5*tmp0));
+  return (TComplex(0,-g2/Mk)*barDot(u(p2,mf),Gamma5*tmp0));
 }
 
 TComplex FRL(int IsR, double s, double t) {
