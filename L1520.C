@@ -7,7 +7,7 @@ double dsigma_dcos(double Eg, double costh) {
   double sum = 0.;
   for (int mi=-1; mi<=+1; mi+=2) {
     for (int hel_g=-1; hel_g<=+1; hel_g+=2) {
-      sum += sq(TComplex::Abs(M_L(Eg, hel_g, mi, k2)));
+      sum += sq(TComplex::Abs(I_L(Eg, hel_g, mi, k2)));
     }
   }
   double p_i = (sq(W)-sq(Mp))/(2*W);
@@ -25,12 +25,24 @@ double sigma(double Eg) {
 }
 
 void L1520() {
-  TGraph *tg0 = new TGraph("fig3.txt");
+  TGraphErrors *tg0 = new TGraphErrors("dat/clas.dat");
+  TGraphErrors *tg1 = new TGraphErrors("dat/saphir.dat");
+  TGraphErrors *tg2 = new TGraphErrors("dat/lamp2.dat");
+  tg0->SetMarkerStyle(20);
+  tg1->SetMarkerStyle(24);
+  tg2->SetMarkerStyle(25);
 
   TCanvas *c1 = new TCanvas();
-  c1->SetGrid();
-  TH1 *frame1 = c1->DrawFrame(1.6,0.,5,1500.);
-  TF1 *cs0 = new TF1("cs0", "sigma(x)", 1.7, 5.);
+  c1->SetFillStyle(4000);
+  c1->SetFrameFillStyle(4000);
+  TH1 *frame0 = c1->DrawFrame(1.0,0.,5.0,1200.);
+  frame0->SetFillStyle(4000);
+  tg0->Draw("p");
+  tg1->Draw("p");
+  tg2->Draw("p");
+
+  /* draw theor curve */
+  double Eth = (sq(Mk + MLs) - sq(Mp))/(2*Mp);
+  TF1 *cs0 = new TF1("cs0", "sigma(x)", Eth, 5.);
   cs0->Draw("same");
-  tg0->Draw("l");
 }

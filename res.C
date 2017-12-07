@@ -41,7 +41,7 @@ Spi u32(int mu, TLorentzVector p, int S) {
   return ret;
 }
 
-TComplex M_L_s(double Eg, int hel_gamma, int mi, TLorentzVector k2) {
+TComplex I_Ls(double Eg, int hel_gamma, int mi, TLorentzVector k2) {
   TLorentzVector k1(0, 0, Eg, Eg), p1(0,0,0,Mp);  // lab system
   TVector3 b = (k1 + p1).BoostVector();
   /* lab --> CM */
@@ -77,19 +77,19 @@ TComplex M_L_s(double Eg, int hel_gamma, int mi, TLorentzVector k2) {
                 - barDot(u32(1,p2,S),tmp0*kk2[1])
                 - barDot(u32(2,p2,S),tmp0*kk2[2])
                 - barDot(u32(3,p2,S),tmp0*kk2[3]);
-  TComplex term1 = TComplex(0,e*g/Mk)*tmp1;
+  TComplex term1 = TComplex(0,-e*g/Mk)*tmp1;
 
   Spi tmp2 = (Gamma5*qsslash+Gamma5*Mp)*(1/(qs.M2()-sq(Mp)))*eslash*k1slash*u(p1,mi);
   TComplex tmp3 = barDot(u32(0,p2,S),tmp2*kk2[0])
                 - barDot(u32(1,p2,S),tmp2*kk2[1])
                 - barDot(u32(2,p2,S),tmp2*kk2[2])
                 - barDot(u32(3,p2,S),tmp2*kk2[3]);
-  TComplex term2 = TComplex(0,-e*kappa*g/(2*Mk*Mp))*tmp3;
+  TComplex term2 = TComplex(0,e*kappa*g/(2*Mk*Mp))*tmp3;
 
   return (term1 + term2);
 }
 
-TComplex M_L_t(double Eg, int hel_gamma, int mi, TLorentzVector k2) {
+TComplex I_Lt(double Eg, int hel_gamma, int mi, TLorentzVector k2) {
   TLorentzVector k1(0, 0, Eg, Eg), p1(0,0,0,Mp);  // lab system
   TVector3 b = (k1 + p1).BoostVector();
   /* lab --> CM */
@@ -123,7 +123,7 @@ TComplex M_L_t(double Eg, int hel_gamma, int mi, TLorentzVector k2) {
   return (TComplex(0,2*e*g/(Mk*(qt.M2()-sq(Mk))))*tmp1*tmp0);
 }
 
-TComplex M_L_c(double Eg, int hel_gamma, int mi, TLorentzVector k2) {
+TComplex I_Lc(double Eg, int hel_gamma, int mi, TLorentzVector k2) {
   TLorentzVector k1(0, 0, Eg, Eg), p1(0,0,0,Mp);  // lab system
   TVector3 b = (k1 + p1).BoostVector();
   /* lab --> CM */
@@ -147,10 +147,10 @@ TComplex M_L_c(double Eg, int hel_gamma, int mi, TLorentzVector k2) {
                 - barDot(u32(2,p2,S),Gamma5*eps[2]*u(p1,mi))
                 - barDot(u32(3,p2,S),Gamma5*eps[3]*u(p1,mi));
 
-  return (TComplex(0,-e*g/Mk)*tmp0);
+  return (TComplex(0,e*g/Mk)*tmp0);
 }
 
-TComplex M_R_s(double Eg, double costh, int hel_phi, int mf, TLorentzVector k1) {
+TComplex I_Rs(double Eg, double costh, int hel_phi, int mf, TLorentzVector k1) {
   double W = TMath::Sqrt(2*Mp*Eg+sq(Mp));
   double Eg_cm = (sq(W) - sq(Mp)) / (2*W);
   TLorentzVector pPhoton(0,0,Eg_cm,Eg_cm);
@@ -197,13 +197,13 @@ TComplex M_R_s(double Eg, double costh, int hel_phi, int mf, TLorentzVector k1) 
           - u32(3,p1,S)*kk1[3];
 
   Spi tmp0 = (eslash*qsslash + eslash*Mp)*(1/(qs.M2()-sq(Mp)))*Gamma5*k1u;
-  TComplex term1 = TComplex(0,-g2/Mk)*barDot(u(p2,mf),tmp0);
-  TComplex term2 = TComplex(0,g2*kappa/(2*Mk*Mp))*barDot(u(p2,mf),k2slash*tmp0);
+  TComplex term1 = TComplex(0,g2/Mk)*barDot(u(p2,mf),tmp0);
+  TComplex term2 = TComplex(0,-g2*kappa/(2*Mk*Mp))*barDot(u(p2,mf),k2slash*tmp0);
 
   return (term1 + term2);
 }
 
-TComplex M_R_t(double Eg, double costh, int hel_phi, int mf, TLorentzVector k1) {
+TComplex I_Rt(double Eg, double costh, int hel_phi, int mf, TLorentzVector k1) {
   double W = TMath::Sqrt(2*Mp*Eg+sq(Mp));
   double Eg_cm = (sq(W) - sq(Mp)) / (2*W);
   TLorentzVector pPhoton(0,0,Eg_cm,Eg_cm);
@@ -245,10 +245,10 @@ TComplex M_R_t(double Eg, double costh, int hel_phi, int mf, TLorentzVector k1) 
                 - kk1[2]*TComplex::Conjugate(eps[2])
                 - kk1[3]*TComplex::Conjugate(eps[3]);
 
-  return (TComplex(0,-2*g2/(Mk*(qt.M2()-sq(Mk))))*tmp1*barDot(u(p2,mf),tmp0));
+  return (TComplex(0,2*g2/(Mk*(qt.M2()-sq(Mk))))*tmp1*barDot(u(p2,mf),tmp0));
 }
 
-TComplex M_R_c(double Eg, double costh, int hel_phi, int mf, TLorentzVector k1) {
+TComplex I_Rc(double Eg, double costh, int hel_phi, int mf, TLorentzVector k1) {
   double W = TMath::Sqrt(2*Mp*Eg+sq(Mp));
   double Eg_cm = (sq(W) - sq(Mp)) / (2*W);
   TLorentzVector pPhoton(0,0,Eg_cm,Eg_cm);
@@ -267,7 +267,7 @@ TComplex M_R_c(double Eg, double costh, int hel_phi, int mf, TLorentzVector k1) 
   TLorentzVector p2 = qs - k2;
 
   /* constants */
-  double g2 = 11. * 4.7;  // 11. * 0.25 or 11. * 4.7 ??
+  double g2 = 11. * 4.7;
   Mat Gamma5 = G[0]*G[1]*G[2]*G[3]*TComplex(0,1);
 
   /* polarization vector */
@@ -280,7 +280,7 @@ TComplex M_R_c(double Eg, double costh, int hel_phi, int mf, TLorentzVector k1) 
            - u32(2,p1,S)*TComplex::Conjugate(eps[2])
            - u32(3,p1,S)*TComplex::Conjugate(eps[3]);
 
-  return (TComplex(0,-g2/Mk)*barDot(u(p2,mf),Gamma5*tmp0));
+  return (TComplex(0,g2/Mk)*barDot(u(p2,mf),Gamma5*tmp0));
 }
 
 TComplex FRL(int IsR, double s, double t) {
@@ -304,21 +304,21 @@ TComplex FRL(int IsR, double s, double t) {
   return TComplex(left*right,0);
 }
 
-TComplex M_L(double Eg, int hel_gamma, int mi, TLorentzVector k2) {
+TComplex I_L(double Eg, int hel_gamma, int mi, TLorentzVector k2) {
   double s = 2*Mp*Eg + sq(Mp);
   double Eg_cm = (s - sq(Mp)) / (2*TMath::Sqrt(s));
   TLorentzVector k1(0,0,Eg_cm,Eg_cm);
   double t = (k1 - k2).M2();
-  return ((M_L_s(Eg,hel_gamma,mi,k2) + M_L_t(Eg,hel_gamma,mi,k2) + M_L_c(Eg,hel_gamma,mi,k2))*FRL(0,s,t));
+  return ((I_Ls(Eg,hel_gamma,mi,k2) + I_Lt(Eg,hel_gamma,mi,k2) + I_Lc(Eg,hel_gamma,mi,k2))*FRL(0,s,t));
 }
 
-TComplex M_R(double Eg, double costh, int hel_phi, int mf, TLorentzVector k1) {
+TComplex I_R(double Eg, double costh, int hel_phi, int mf, TLorentzVector k1) {
   double s = 2*Mp*Eg + sq(Mp);
   double E_phi = (s + sq(Mphi) - sq(Mp)) / (2*TMath::Sqrt(s));
   double p_phi = TMath::Sqrt(sq(E_phi) - sq(Mphi));
   TLorentzVector k2(p_phi*TMath::Sqrt(1-sq(costh)),0,p_phi*costh,E_phi);
   double t = (k1 - k2).M2();
-  return ((M_R_s(Eg,costh,hel_phi,mf,k1) + M_R_t(Eg,costh,hel_phi,mf,k1) + M_R_c(Eg,costh,hel_phi,mf,k1))*FRL(1,s,t));
+  return ((I_Rs(Eg,costh,hel_phi,mf,k1) + I_Rt(Eg,costh,hel_phi,mf,k1) + I_Rc(Eg,costh,hel_phi,mf,k1))*FRL(1,s,t));
 }
 
 TComplex ImM(double Eg, double costh, int hel_gamma, int hel_phi, int mi, int mf) {
@@ -333,7 +333,7 @@ TComplex ImM(double Eg, double costh, int hel_gamma, int hel_phi, int mi, int mf
 //  for (double cosK=-1.; cosK<1.; cosK+=dx) {
 //    for (double phi=0.; phi<2*pi; phi+=dx) {
 //      pK = TLorentzVector(r*TMath::Sqrt(1-sq(cosK))*TMath::Cos(phi), r*TMath::Sqrt(1-sq(cosK))*TMath::Sin(phi), r*cosK, TMath::Sqrt(sq(r)+sq(Mk)));
-//      sum += M_L(Eg, hel_gamma, mi, pK)*TComplex::Conjugate(M_R(Eg, costh, hel_phi, mf, pK));
+//      sum += I_L(Eg, hel_gamma, mi, pK)*TComplex::Conjugate(I_R(Eg, costh, hel_phi, mf, pK));
 //    }
 //  }
 //  sum *= TComplex(sq(dx),0);
@@ -346,21 +346,21 @@ TComplex ImM(double Eg, double costh, int hel_gamma, int hel_phi, int mi, int mf
   if (magic_cos < 1.-dx/2) {
     for (double cosK=magic_cos+dx/2; cosK<1.; cosK+=dx) {
       pK = TLorentzVector(r*TMath::Sqrt(1-sq(cosK)), 0., r*cosK, TMath::Sqrt(sq(r)+sq(Mk)));
-      sum += M_L(Eg, hel_gamma, mi, pK)*TComplex::Conjugate(M_R(Eg, costh, hel_phi, mf, pK));
+      sum += I_L(Eg, hel_gamma, mi, pK)*TComplex::Conjugate(I_R(Eg, costh, hel_phi, mf, pK));
     }
     for (double cosK=magic_cos-dx/2; cosK>-1.; cosK-=dx) {
       pK = TLorentzVector(r*TMath::Sqrt(1-sq(cosK)), 0., r*cosK, TMath::Sqrt(sq(r)+sq(Mk)));
-      sum += M_L(Eg, hel_gamma, mi, pK)*TComplex::Conjugate(M_R(Eg, costh, hel_phi, mf, pK));
+      sum += I_L(Eg, hel_gamma, mi, pK)*TComplex::Conjugate(I_R(Eg, costh, hel_phi, mf, pK));
     }
   } else {
     for (double cosK=-1.; cosK<1.; cosK+=dx) {
       pK = TLorentzVector(r*TMath::Sqrt(1-sq(cosK)), 0., r*cosK, TMath::Sqrt(sq(r)+sq(Mk)));
-      sum += M_L(Eg, hel_gamma, mi, pK)*TComplex::Conjugate(M_R(Eg, costh, hel_phi, mf, pK));
+      sum += I_L(Eg, hel_gamma, mi, pK)*TComplex::Conjugate(I_R(Eg, costh, hel_phi, mf, pK));
     }
   }
   sum *= TComplex(2*pi*dx,0);
 
-  return (-sum * TComplex(0, r / (W*32*sq(pi))));
+  return (sum * TComplex(0, r / (W*32*sq(pi))));
 }
 
 double dsigma_dt_R(double Eg, double costh) {
@@ -376,26 +376,4 @@ double dsigma_dt_R(double Eg, double costh) {
   }
   double den = 64*pi*sq(2*Eg*Mp);
   return (hbarc2*sum/den);
-}
-
-void res() {
-//  TCanvas *c2 = new TCanvas();
-//  TH1 *frame2 = c2->DrawFrame(1.6,-0.2,6,0.2);
-//  TF1 *ImM0 = new TF1("ImM0","ImM(x,1.0,1,1,-1,-1).Re()", 1.7, 6);
-//  TF1 *ImM1 = new TF1("ImM1","ImM(x,1.0,1,1,-1,-1).Im()", 1.7, 6);
-//  ImM1->SetLineColor(3);
-//  std::cout << ImM0->Eval(3.0) << std::endl;
-//  std::cout << ImM1->Eval(3.0) << std::endl;
-//  ImM0->Draw("same");
-//  ImM1->Draw("same");
-
-  TCanvas *c3 = new TCanvas();
-  c3->SetLogy();
-  TH1 *frame3 = c3->DrawFrame(1.6,1.e-5,6,10.);
-  TF1 *cs0 = new TF1("cs0", "dsigma_dt_R(x,1.0)", 1.7, 6.);
-  std::cout << "Eg: 1.7 --> " << cs0->Eval(1.7) << std::endl;
-  std::cout << "Eg: 2.0 --> " << cs0->Eval(2.0) << std::endl;
-  std::cout << "Eg: 2.5 --> " << cs0->Eval(2.5) << std::endl;
-  std::cout << "Eg: 3.0 --> " << cs0->Eval(3.0) << std::endl;
-  cs0->Draw("same");
 }
