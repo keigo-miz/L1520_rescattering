@@ -28,21 +28,45 @@ void L1520() {
   TGraphErrors *tg0 = new TGraphErrors("dat/clas.dat");
   TGraphErrors *tg1 = new TGraphErrors("dat/saphir.dat");
   TGraphErrors *tg2 = new TGraphErrors("dat/lamp2.dat");
+  TGraph *tg3 = new TGraph("dat/fig3.txt");
   tg0->SetMarkerStyle(20);
   tg1->SetMarkerStyle(24);
   tg2->SetMarkerStyle(25);
+  tg3->SetLineColor(3);
 
   TCanvas *c1 = new TCanvas();
   c1->SetFillStyle(4000);
   c1->SetFrameFillStyle(4000);
-  TH1 *frame0 = c1->DrawFrame(1.0,0.,5.0,1200.);
+  TH1 *frame0 = c1->DrawFrame(1.50001,0.,5.0,1.5);
   frame0->SetFillStyle(4000);
+  frame0->GetYaxis()->SetNdivisions(503);
+  frame0->GetYaxis()->CenterTitle(kTRUE);
+  frame0->GetYaxis()->SetTitleSize(0.06);
+  frame0->GetYaxis()->SetTitleOffset(0.6);
+  frame0->GetYaxis()->SetTitle("#sigma (#mub)");
+  frame0->GetXaxis()->CenterTitle(kTRUE);
+  frame0->GetXaxis()->SetTitleSize(0.05);
+  frame0->GetXaxis()->SetTitleOffset(0.9);
+  frame0->GetXaxis()->SetTitle("E_{#gamma} (GeV)");
+
+  /* draw theor curve */
+  double Eth = (sq(Mk + MLs) - sq(Mp))/(2*Mp);
+  TF1 *cs0 = new TF1("cs0", "sigma(x)/1000", Eth-0.01662, 5.);
+  tg3->Draw("l");
+  cs0->Draw("same");
   tg0->Draw("p");
   tg1->Draw("p");
   tg2->Draw("p");
 
-  /* draw theor curve */
-  double Eth = (sq(Mk + MLs) - sq(Mp))/(2*Mp);
-  TF1 *cs0 = new TF1("cs0", "sigma(x)", Eth, 5.);
-  cs0->Draw("same");
+  /* legend */
+  TLegend *leg = new TLegend(0.6,0.5,0.9,0.9);
+  leg->SetBorderSize(0); leg->SetFillStyle(0);
+  leg->AddEntry(tg0,"CLAS 2013","lp");
+  leg->AddEntry(tg1,"SAPHIR 2011","lp");
+  leg->AddEntry(tg2,"LAMP2 1980","lp");
+  leg->AddEntry(tg3,"Ryu et al. (2014)","l");
+  leg->AddEntry(cs0,"This work","lp");
+  leg->Draw();
+
+  c1->Print("L1520fit.pdf");
 }

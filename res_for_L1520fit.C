@@ -283,20 +283,7 @@ TComplex I_Rc(double Eg, double costh, int hel_phi, int mf, TLorentzVector k1) {
   return (TComplex(0,g2/Mk)*barDot(u(p2,mf),Gamma5*tmp0));
 }
 
-TComplex FRL(int IsR, double s, double t) {
-  double n1, n2;
-  double L1, L2;
-  if (IsR == 1) {
-    n1 = 1;
-    n2 = 1;
-    L1 = 1.59;  // [GeV]
-    L2 = 1.5;  // [GeV]
-  } else {
-    n1 = 0.6;
-    n2 = 8;
-    L1 = 1.16;  // [GeV]
-    L2 = 2.74;  // [GeV]
-  }
+TComplex FRL(int IsR, double s, double t, double n1, double n2, double L1, double L2) {
   double nL4_1 = n1*L1*L1*L1*L1;
   double nL4_2 = n2*L2*L2*L2*L2;
   double left = TMath::Power(nL4_1 / (nL4_1 + sq(s-sq(Mp))), (Double_t) n1);
@@ -304,76 +291,10 @@ TComplex FRL(int IsR, double s, double t) {
   return TComplex(left*right,0);
 }
 
-TComplex I_L(double Eg, int hel_gamma, int mi, TLorentzVector k2) {
+TComplex I_L(double Eg, int hel_gamma, int mi, TLorentzVector k2, double n1, double n2, double L1, double L2) {
   double s = 2*Mp*Eg + sq(Mp);
   double Eg_cm = (s - sq(Mp)) / (2*TMath::Sqrt(s));
   TLorentzVector k1(0,0,Eg_cm,Eg_cm);
   double t = (k1 - k2).M2();
-  return ((I_Ls(Eg,hel_gamma,mi,k2) + I_Lt(Eg,hel_gamma,mi,k2) + I_Lc(Eg,hel_gamma,mi,k2))*FRL(0,s,t));
-}
-
-TComplex I_R(double Eg, double costh, int hel_phi, int mf, TLorentzVector k1) {
-  double s = 2*Mp*Eg + sq(Mp);
-  double E_phi = (s + sq(Mphi) - sq(Mp)) / (2*TMath::Sqrt(s));
-  double p_phi = TMath::Sqrt(sq(E_phi) - sq(Mphi));
-  TLorentzVector k2(p_phi*TMath::Sqrt(1-sq(costh)),0,p_phi*costh,E_phi);
-  double t = (k1 - k2).M2();
-  return ((I_Rs(Eg,costh,hel_phi,mf,k1) + I_Rt(Eg,costh,hel_phi,mf,k1) + I_Rc(Eg,costh,hel_phi,mf,k1))*FRL(1,s,t));
-}
-
-TComplex ImM(double Eg, double costh, int hel_gamma, int hel_phi, int mi, int mf) {
-  if (2*hel_gamma+mi != 2*hel_phi+mf) return TComplex(0,0);
-  double W = TMath::Sqrt(2*Mp*Eg + sq(Mp));
-  double r = TMath::Sqrt((sq(W)-sq(MLs+Mk))*(sq(W)-sq(MLs-Mk)))/(2*W);
-
-  double dx = 0.05;
-  TComplex sum = TComplex(0,0);
-  TLorentzVector pK;
-  /* integration */
-//  for (double cosK=-1.; cosK<1.; cosK+=dx) {
-//    for (double phi=0.; phi<2*pi; phi+=dx) {
-//      pK = TLorentzVector(r*TMath::Sqrt(1-sq(cosK))*TMath::Cos(phi), r*TMath::Sqrt(1-sq(cosK))*TMath::Sin(phi), r*cosK, TMath::Sqrt(sq(r)+sq(Mk)));
-//      sum += I_L(Eg, hel_gamma, mi, pK)*TComplex::Conjugate(I_R(Eg, costh, hel_phi, mf, pK));
-//    }
-//  }
-//  sum *= TComplex(sq(dx),0);
-  /* fast integration (available only when t=t_min) */
-  /* get costh at which, amp. is infinity */
-  double E_k = TMath::Sqrt(sq(r) + sq(Mk));
-  double E_phi = (sq(W) + sq(Mphi) - sq(Mp)) / (2*W);
-  double p_phi = TMath::Sqrt(sq(E_phi) - sq(Mphi));
-  double magic_cos = (2*E_k*E_phi - sq(Mphi)) / (2*p_phi*r);
-  if (magic_cos < 1.-dx/2) {
-    for (double cosK=magic_cos+dx/2; cosK<1.; cosK+=dx) {
-      pK = TLorentzVector(r*TMath::Sqrt(1-sq(cosK)), 0., r*cosK, TMath::Sqrt(sq(r)+sq(Mk)));
-      sum += I_L(Eg, hel_gamma, mi, pK)*TComplex::Conjugate(I_R(Eg, costh, hel_phi, mf, pK));
-    }
-    for (double cosK=magic_cos-dx/2; cosK>-1.; cosK-=dx) {
-      pK = TLorentzVector(r*TMath::Sqrt(1-sq(cosK)), 0., r*cosK, TMath::Sqrt(sq(r)+sq(Mk)));
-      sum += I_L(Eg, hel_gamma, mi, pK)*TComplex::Conjugate(I_R(Eg, costh, hel_phi, mf, pK));
-    }
-  } else {
-    for (double cosK=-1.; cosK<1.; cosK+=dx) {
-      pK = TLorentzVector(r*TMath::Sqrt(1-sq(cosK)), 0., r*cosK, TMath::Sqrt(sq(r)+sq(Mk)));
-      sum += I_L(Eg, hel_gamma, mi, pK)*TComplex::Conjugate(I_R(Eg, costh, hel_phi, mf, pK));
-    }
-  }
-  sum *= TComplex(2*pi*dx,0);
-
-  return (sum * TComplex(0, r / (W*32*sq(pi))));
-}
-
-double dsigma_dt_R(double Eg, double costh) {
-  double sum = 0.;
-  for (int mi=-1; mi<=+1; mi+=2) {
-    for (int mf=-1; mf<=+1; mf+=2) {
-      for (int hel_g=-1; hel_g<=+1; hel_g+=2) {
-        for (int hel_V=-1; hel_V<=+1; hel_V++) {
-          sum += sq(TComplex::Abs(ImM(Eg,costh,hel_g,hel_V,mi,mf)));
-        }
-      }
-    }
-  }
-  double den = 64*pi*sq(2*Eg*Mp);
-  return (hbarc2*sum/den);
+  return ((I_Ls(Eg,hel_gamma,mi,k2) + I_Lt(Eg,hel_gamma,mi,k2) + I_Lc(Eg,hel_gamma,mi,k2))*FRL(0,s,t, n1, n2, L1, L2));
 }
