@@ -1,0 +1,8 @@
+# L1520fit/
+determine the FF for g p --> K+ L(1520)
+
+# cparFit/
+determine Cp and FF for K+ L(1520) --> phi p
+
+# slope/
+draw dsig/dt (high calculation cost)

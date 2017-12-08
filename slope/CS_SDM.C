@@ -1,5 +1,5 @@
-#include "pomeron.C"
-#include "meson.C"
+#include "../pomeron.C"
+#include "../meson.C"
 #include "res.C"
 
 double dsigma_dt(double Eg, double costh) {
