@@ -29,7 +29,7 @@ void show_cpar() {
   leg1->AddEntry(tgC2, "LEPS (2005)", "lp");
   leg1->AddEntry(theor_curve2, "K^{#plus}#Lambda(1520) rescattering", "l");
   leg1->AddEntry(theor_curve3, "Pomeron", "l");
-  leg1->AddEntry(theor_curve4, "#pi^{0}+#eta", "l");
+  leg1->AddEntry(theor_curve4, "#pi^{0}#plus#eta", "l");
   leg1->AddEntry(theor_curve1, "Total", "l");
 
   TCanvas *c1 = new TCanvas("c","c",600,400); // default 700x500

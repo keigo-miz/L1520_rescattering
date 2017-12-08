@@ -1,20 +1,12 @@
-#include "CS_SDM.C"
-
-double dsdt(double Eg, double tp) {
-  double W = TMath::Sqrt(2*Eg*Mp + sq(Mp));
-  double EgCM = (sq(W) - sq(Mp)) / (2*W);
-  double Ephi = (sq(W) + sq(Mphi) - sq(Mp)) / (2*W);
-  double Pphi = TMath::Sqrt((sq(W) - sq(Mphi+Mp))*(sq(W) - sq(Mphi-Mp))) / (2*W);
-  double tmin = 2*EgCM*Pphi - 2*EgCM*Ephi + sq(Mphi);
-  double t = tp + tmin;
-  double cost = (t + 2*EgCM*Ephi - sq(Mphi)) / (2*EgCM*Pphi);
-
-  double ret = dsigma_dt(Eg,cost);
-  return ret;
-}
-
 void show() {
   const Int_t ne = 9;
+
+  TGraph *theor[ne];
+  for (int i=0; i<ne; i++) {
+    theor[i] = new TGraph(Form("dat/calc%d.dat",i+1));
+    theor[i]->SetLineColor(2);
+  }
+
   TGraphErrors *cs[ne];
   for (int i=0; i<ne; i++) {
     cs[i] = new TGraphErrors(Form("dat/cs%d.dat",i+1));
@@ -32,17 +24,6 @@ void show() {
   leg->SetFillStyle(0); leg->SetBorderSize(0);
   leg->AddEntry(cs[0], "This work", "lp");
   leg->AddEntry(mibe[0], "LEPS (2005)", "lp");
-
-  TF1 *ff[ne];
-  ff[0] = new TF1("ff0","dsigma_dt(1.77,x)",-0.6,0.0);
-  ff[1] = new TF1("ff1","dsigma_dt(1.97,x)",-0.6,0.0);
-  ff[2] = new TF1("ff2","dsigma_dt(2.17,x)",-0.6,0.0);
-  ff[3] = new TF1("ff3","dsigma_dt(2.32,x)",-0.6,0.0);
-  ff[4] = new TF1("ff4","dsigma_dt(2.42,x)",-0.6,0.0);
-  ff[5] = new TF1("ff5","dsigma_dt(2.52,x)",-0.6,0.0);
-  ff[6] = new TF1("ff6","dsigma_dt(2.62,x)",-0.6,0.0);
-  ff[7] = new TF1("ff7","dsigma_dt(2.72,x)",-0.6,0.0);
-  ff[8] = new TF1("ff8","dsigma_dt(2.82,x)",-0.6,0.0);
 
   TCanvas *c1 = new TCanvas("c","c",800,800);
   c1->SetBottomMargin(0.18);
@@ -63,7 +44,7 @@ void show() {
     frame1[i]->GetXaxis()->SetNdivisions(503);
     frame1[i]->GetXaxis()->SetLabelSize(0.);
     frame1[i]->GetYaxis()->SetLabelSize(0.);
-    ff[i]->Draw("same");
+    theor[i]->Draw("csame");
     if (i<4) mibe[i]->Draw("p");
     cs[i]->Draw("p");
     if (i==0) leg->Draw();
