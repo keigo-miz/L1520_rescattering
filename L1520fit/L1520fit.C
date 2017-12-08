@@ -1,4 +1,4 @@
-#include "res_for_L1520fit.C"
+#include "res.C"
 
 double dsigma_dcos(double Eg, double costh, double n1, double n2, double L1, double L2) {
   double W = TMath::Sqrt(2*Mp*Eg + sq(Mp));
@@ -12,7 +12,7 @@ double dsigma_dcos(double Eg, double costh, double n1, double n2, double L1, dou
   }
   double p_i = (sq(W)-sq(Mp))/(2*W);
   sum *= (1./(64*sq(pi)*sq(W)))*(r/p_i)*(1./4.);
-  return (hbarc2*sum*1000.);  // [nbarn]
+  return (hbarc2*sum);  // [ubarn]
 }
 
 double sigma(double Eg, double n1, double n2, double L1, double L2) {
@@ -31,7 +31,7 @@ void L1520fit() {
   TCanvas *c1 = new TCanvas();
   c1->SetFillStyle(4000);
   c1->SetFrameFillStyle(4000);
-  TH1 *frame0 = c1->DrawFrame(1.0,0.,5.0,1200.);
+  TH1 *frame0 = c1->DrawFrame(1.0,0.,5.0,1.2);
   frame0->SetFillStyle(4000);
   tg0->Draw("p");
 

@@ -1,4 +1,4 @@
-#include "res.C"
+#include "../res.C"
 
 double dsigma_dcos(double Eg, double costh) {
   double W = TMath::Sqrt(2*Mp*Eg + sq(Mp));
@@ -12,7 +12,7 @@ double dsigma_dcos(double Eg, double costh) {
   }
   double p_i = (sq(W)-sq(Mp))/(2*W);
   sum *= (1./(64*sq(pi)*sq(W)))*(r/p_i)*(1./4.);
-  return (hbarc2*sum*1000.);  // [nbarn]
+  return (hbarc2*sum);  // [ubarn]
 }
 
 double sigma(double Eg) {
@@ -51,7 +51,7 @@ void L1520() {
 
   /* draw theor curve */
   double Eth = (sq(Mk + MLs) - sq(Mp))/(2*Mp);
-  TF1 *cs0 = new TF1("cs0", "sigma(x)/1000", Eth-0.01662, 5.);
+  TF1 *cs0 = new TF1("cs0", "sigma(x)", Eth-0.01662, 5.);
   tg3->Draw("l");
   cs0->Draw("same");
   tg0->Draw("p");

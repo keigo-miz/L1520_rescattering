@@ -1,6 +1,6 @@
 /* based on Ryu's paper (2014) */
 
-#include "../amp_calc/spinor_mat.h"
+#include "spinor_mat.h"
 #define MLs (1.5195)  // L(1520) mass
 #define Mk (0.493677)  // K+ mass
 
@@ -287,10 +287,10 @@ TComplex FRL(int IsR, double s, double t) {
   double n1, n2;
   double L1, L2;
   if (IsR == 1) {
-    n1 = 1;
-    n2 = 1;
-    L1 = 1.59;  // [GeV]
-    L2 = 1.5;  // [GeV]
+    n1 = 5;
+    n2 = 15;
+    L1 = 2.8139;  // [GeV]
+    L2 = 0.503733;  // [GeV]
   } else {
     n1 = 0.6;
     n2 = 8;
@@ -321,7 +321,7 @@ TComplex I_R(double Eg, double costh, int hel_phi, int mf, TLorentzVector k1) {
   return ((I_Rs(Eg,costh,hel_phi,mf,k1) + I_Rt(Eg,costh,hel_phi,mf,k1) + I_Rc(Eg,costh,hel_phi,mf,k1))*FRL(1,s,t));
 }
 
-TComplex ImM(double Eg, double costh, int hel_gamma, int hel_phi, int mi, int mf) {
+TComplex iImI(double Eg, double costh, int hel_gamma, int hel_phi, int mi, int mf) {
   if (2*hel_gamma+mi != 2*hel_phi+mf) return TComplex(0,0);
   double W = TMath::Sqrt(2*Mp*Eg + sq(Mp));
   double r = TMath::Sqrt((sq(W)-sq(MLs+Mk))*(sq(W)-sq(MLs-Mk)))/(2*W);
@@ -369,11 +369,52 @@ double dsigma_dt_R(double Eg, double costh) {
     for (int mf=-1; mf<=+1; mf+=2) {
       for (int hel_g=-1; hel_g<=+1; hel_g+=2) {
         for (int hel_V=-1; hel_V<=+1; hel_V++) {
-          sum += sq(TComplex::Abs(ImM(Eg,costh,hel_g,hel_V,mi,mf)));
+          sum += sq(TComplex::Abs(iImI(Eg,costh,hel_g,hel_V,mi,mf)));
         }
       }
     }
   }
   double den = 64*pi*sq(2*Eg*Mp);
   return (hbarc2*sum/den);
+}
+
+/* following codes are just for check */
+TComplex I_Ls_w(double Eg) {
+  double cosK = 0.9;
+  double W = TMath::Sqrt(2*Mp*Eg + sq(Mp));
+  double r = TMath::Sqrt((sq(W)-sq(MLs+Mk))*(sq(W)-sq(MLs-Mk)))/(2*W);
+  TLorentzVector pK = TLorentzVector(r*TMath::Sqrt(1-sq(cosK)), 0., r*cosK, TMath::Sqrt(sq(r)+sq(Mk)));
+  return (I_Lc(Eg, 1, -1, pK));
+}
+
+TComplex I_Rs_w(double Eg) {
+  double cosK = 0.9;
+  double W = TMath::Sqrt(2*Mp*Eg + sq(Mp));
+  double r = TMath::Sqrt((sq(W)-sq(MLs+Mk))*(sq(W)-sq(MLs-Mk)))/(2*W);
+  TLorentzVector pK = TLorentzVector(r*TMath::Sqrt(1-sq(cosK)), 0., r*cosK, TMath::Sqrt(sq(r)+sq(Mk)));
+  return (I_Rt(Eg, 0.9, 1, -1, pK));
+}
+
+void res() {
+//  TF1 *f1 = new TF1("f1","I_Rs_w(x).Re()",2.,5);
+//  TF1 *f2 = new TF1("f2","I_Rs_w(x).Im()",2.,5);
+//  f2->SetLineColor(3);
+//  TF1 *f3 = new TF1("f3","iImI(x, 1.0, 1, 1, 1, 1).Im()",2.,5);
+//  TF1 *f4 = new TF1("f4","iImI(x, 1.0, 1, 1, 1, 1).Re()",2.,5);
+//  f3->SetLineColor(4);
+//  f4->SetLineColor(5);
+//
+//  TCanvas *c1 = new TCanvas();
+//  TH1 *frame0 = c1->DrawFrame(1.5,-2,5,2);
+////  f2->Draw("same");
+////  f1->Draw("same");
+//  f3->Draw("same");
+////  f4->Draw("same");
+
+
+
+  TF1 *f5 = new TF1("f5","dsigma_dt_R(x,1.)",1.7,3);
+  TCanvas *c2 = new TCanvas();
+  TH1 *frame1 = c2->DrawFrame(1.5,0.,3,0.1);
+  f5->Draw("same");
 }

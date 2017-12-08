@@ -1,6 +1,6 @@
 /* based on Ryu's paper (2014) */
 
-#include "../amp_calc/spinor_mat.h"
+#include "../spinor_mat.h"
 #define MLs (1.5195)  // L(1520) mass
 #define Mk (0.493677)  // K+ mass
 
