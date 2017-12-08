@@ -23,6 +23,21 @@ double dsigma_dt(double Eg, double costh) {
   return (hbarc2*sum/den);
 }
 
+double dsigma_dt_R(double Eg, double costh) {
+  double sum = 0.;
+  for (int mi=-1; mi<=+1; mi+=2) {
+    for (int mf=-1; mf<=+1; mf+=2) {
+      for (int hel_g=-1; hel_g<=+1; hel_g+=2) {
+        for (int hel_V=-1; hel_V<=+1; hel_V++) {
+          sum += sq(TComplex::Abs(iImI(Eg,costh,hel_g,hel_V,mi,mf)));
+        }
+      }
+    }
+  }
+  double den = 64*pi*sq(2*Eg*Mp);
+  return (hbarc2*sum/den);
+}
+
 double dsigma_dt_T(double Eg, double costh) {
   TComplex I;
   double sum = 0.;

@@ -5,7 +5,8 @@ double rr1(double Eg) {
 }
 
 double rr2(double Eg) {
-  return rho0(Eg, 1., 1, -1).Re();
+  return 0;
+//  return rho0(Eg, 1., 1, -1).Re();
 }
 
 double rr3(double Eg) {
@@ -13,14 +14,16 @@ double rr3(double Eg) {
 }
 
 double rr4(double Eg) {
-  return ((rho1(Eg,1.,1,-1).Re() + rho2(Eg,1.,1,-1).Im())/2.);
+  return 0;
+//  return ((rho1(Eg,1.,1,-1).Re() + rho2(Eg,1.,1,-1).Im())/2.);
 }
 
 double rr5(double Eg) {
-  return (2*rho1(Eg,1.,1,1).Re() + rho1(Eg,1.,0,0).Re());
+  return 0;
+//  return (2*rho1(Eg,1.,1,1).Re() + rho1(Eg,1.,0,0).Re());
 }
 
-void show() {
+void show_SDME() {
   double Elow = 1.7;
   double Ehigh = 2.9;
   /* SDME */
