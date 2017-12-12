@@ -65,8 +65,8 @@ void L1520() {
   leg->AddEntry(tg1,"SAPHIR 2011","lp");
   leg->AddEntry(tg2,"LAMP2 1980","lp");
   leg->AddEntry(tg3,"Ryu et al. (2014)","l");
-  leg->AddEntry(cs0,"This work","lp");
+  leg->AddEntry(cs0,"Fit result","lp");
   leg->Draw();
 
-  c1->Print("L1520fit.pdf");
+  c1->Print("../../dt/pic/5disc/L1520fit.pdf");
 }
