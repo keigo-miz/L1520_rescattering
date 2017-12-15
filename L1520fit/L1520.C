@@ -64,7 +64,7 @@ void L1520() {
   leg->AddEntry(tg0,"CLAS 2013","lp");
   leg->AddEntry(tg1,"SAPHIR 2011","lp");
   leg->AddEntry(tg2,"LAMP2 1980","lp");
-  leg->AddEntry(tg3,"Ryu et al. (2014)","l");
+  leg->AddEntry(tg3,"Ryu #font[52]{et al.} (2014)","l");
   leg->AddEntry(cs0,"Fit result","lp");
   leg->Draw();
 
