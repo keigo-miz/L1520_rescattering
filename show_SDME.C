@@ -24,6 +24,9 @@ double rr5(double Eg) {
 }
 
 void show_SDME() {
+  gStyle->SetLabelFont(132,"XY");
+  gStyle->SetLabelSize(0.042,"XY");
+  gStyle->SetTitleFont(132,"XY");
   double Elow = 1.7;
   double Ehigh = 2.9;
   /* SDME */
@@ -58,6 +61,7 @@ void show_SDME() {
 
   /* Legend setting */
   TLegend *leg = new TLegend(0.2, 0.5, 0.8, 0.9);
+  leg->SetTextFont(132);
   leg->SetFillStyle(0); leg->SetBorderSize(0);
   leg->AddEntry(tg0[0], "This work", "lp");
   leg->AddEntry(chang[0], "LEPS (2010)", "lp");
@@ -71,6 +75,7 @@ void show_SDME() {
   c1->Divide(3,2,0,0);
   TH1 *frame1[5];
   TLatex *latex = new TLatex();
+  latex->SetTextFont(132);
   latex->SetTextSize(0.12);
   TLine *line0 = new TLine(Elow,0.,Ehigh,0.);
   line0->SetLineStyle(2);
@@ -91,7 +96,7 @@ void show_SDME() {
   c1->cd(1); leg->Draw();
   c1->cd(6)->SetFillStyle(4000);
   c1->cd(6)->SetFrameFillStyle(4000);
-  frame1[3]->GetXaxis()->SetTitle("E_{#gamma} (GeV)");
+  frame1[3]->GetXaxis()->SetTitle("#font[12]{E_{#gamma}} (GeV)");
   frame1[3]->GetXaxis()->CenterTitle(kTRUE);
   frame1[3]->GetXaxis()->SetTitleSize(0.1);
   frame1[3]->GetXaxis()->SetTitleOffset(0.9);
@@ -111,7 +116,6 @@ void show_SDME() {
   pad0->Draw();
   pad0->SetNumber(7);
   c1->cd(7);
-  latex->SetTextFont(42);
   latex->SetTextSize(0.042);
   double start = 0.672, diff = 0.2620;
   latex->DrawLatexNDC(start+diff*0/5,0.505,"1.8");
@@ -121,5 +125,5 @@ void show_SDME() {
   latex->DrawLatexNDC(start+diff*4/5,0.505,"2.6");
   latex->DrawLatexNDC(start+diff*5/5,0.505,"2.8");
 
-  c1->Print("rhoVe_rescatt.pdf");
+  c1->Print("../dt/pic/5disc/rhoVe_rescatt.pdf");
 }

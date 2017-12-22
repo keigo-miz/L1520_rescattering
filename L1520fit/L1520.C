@@ -25,6 +25,9 @@ double sigma(double Eg) {
 }
 
 void L1520() {
+  gStyle->SetLabelFont(132,"XY");
+  gStyle->SetLabelSize(0.042,"XY");
+  gStyle->SetTitleFont(132,"XY");
   TGraphErrors *tg0 = new TGraphErrors("dat/clas.dat");
   TGraphErrors *tg1 = new TGraphErrors("dat/saphir.dat");
   TGraphErrors *tg2 = new TGraphErrors("dat/lamp2.dat");
@@ -47,7 +50,7 @@ void L1520() {
   frame0->GetXaxis()->CenterTitle(kTRUE);
   frame0->GetXaxis()->SetTitleSize(0.05);
   frame0->GetXaxis()->SetTitleOffset(0.9);
-  frame0->GetXaxis()->SetTitle("E_{#gamma} (GeV)");
+  frame0->GetXaxis()->SetTitle("#font[12]{E_{#gamma}} (GeV)");
 
   /* draw theor curve */
   double Eth = (sq(Mk + MLs) - sq(Mp))/(2*Mp);
@@ -60,11 +63,12 @@ void L1520() {
 
   /* legend */
   TLegend *leg = new TLegend(0.6,0.5,0.9,0.9);
+  leg->SetTextFont(132);
   leg->SetBorderSize(0); leg->SetFillStyle(0);
   leg->AddEntry(tg0,"CLAS 2013","lp");
   leg->AddEntry(tg1,"SAPHIR 2011","lp");
   leg->AddEntry(tg2,"LAMP2 1980","lp");
-  leg->AddEntry(tg3,"Ryu #font[52]{et al.} (2014)","l");
+  leg->AddEntry(tg3,"Ryu #font[12]{et al.} (2014)","l");
   leg->AddEntry(cs0,"Fit result","lp");
   leg->Draw();
 

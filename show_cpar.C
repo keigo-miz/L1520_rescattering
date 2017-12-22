@@ -1,6 +1,9 @@
 #include "CS_SDM.C"
 
 void show_cpar() {
+  gStyle->SetLabelFont(132,"XY");
+  gStyle->SetLabelSize(0.042,"XY");
+  gStyle->SetTitleFont(132,"XY");
   double Eth = Mphi + sq(Mphi)/(2*Mp);
 
   /* theoretical curves */
@@ -23,13 +26,14 @@ void show_cpar() {
   tgC2->SetMarkerStyle(24);
 
   /* Legend setting */
-  TLegend *leg1 = new TLegend(0.65, 0.2, 0.9, 0.5);
+  TLegend *leg1 = new TLegend(0.5, 0.2, 0.95, 0.65);
+  leg1->SetTextFont(132);
   leg1->SetFillStyle(0); leg1->SetBorderSize(0);
   leg1->AddEntry(tgC1, "This work", "lp");
   leg1->AddEntry(tgC2, "LEPS (2005)", "lp");
-  leg1->AddEntry(theor_curve2, "K^{#plus}#Lambda(1520) rescattering", "l");
   leg1->AddEntry(theor_curve3, "Pomeron", "l");
   leg1->AddEntry(theor_curve4, "#pi^{0}#plus#eta", "l");
+  leg1->AddEntry(theor_curve2, "#font[12]{K^{#plus}}#Lambda(1520) rescatt.", "l");
   leg1->AddEntry(theor_curve1, "Total", "l");
 
   TCanvas *c1 = new TCanvas("c","c",600,400); // default 700x500
@@ -39,11 +43,11 @@ void show_cpar() {
   c1->SetTopMargin(0.05);
   c1->SetLeftMargin(0.12);
   c1->SetRightMargin(0.08);
-  TH1 *frame1 = c1->DrawFrame(1.5,0.,2.999,1.3);
-  frame1->GetXaxis()->SetTitle("E_{#gamma} (GeV)");
+  TH1 *frame1 = c1->DrawFrame(1.5,0.,3.,1.3);
+  frame1->GetXaxis()->SetTitle("#font[12]{E_{#gamma}} (GeV)");
   frame1->GetXaxis()->CenterTitle(kTRUE);
   frame1->GetXaxis()->SetTitleSize(0.05);
-  frame1->GetYaxis()->SetTitle("(d#sigma/dt)_{t=t_{min}} (#mub/GeV^{2})");
+  frame1->GetYaxis()->SetTitle("(#font[12]{d#sigma}/#font[12]{dt})_{#font[12]{t}=#font[12]{t}_{min}} (#mub/GeV^{2})");
   frame1->GetYaxis()->CenterTitle(kTRUE);
   frame1->GetYaxis()->SetTitleSize(0.05);
   /* label settings */
@@ -58,5 +62,5 @@ void show_cpar() {
   tgC1->Draw("p");
   leg1->Draw();
 
-  c1->Print("cpar_rescatt.pdf");
+  c1->Print("../dt/pic/5disc/cpar_rescatt.pdf");
 }
