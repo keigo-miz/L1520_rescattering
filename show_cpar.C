@@ -62,5 +62,5 @@ void show_cpar() {
   tgC1->Draw("p");
   leg1->Draw();
 
-  c1->Print("../dt/pic/5disc/cpar_rescatt.pdf");
+  c1->Print("cpar_rescatt.pdf");
 }
